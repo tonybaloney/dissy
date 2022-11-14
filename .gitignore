@@ -1,0 +1,9 @@
+*.py[co]
+__pycache__
+*.so
+*.dylib
+*.egg-info
+*.egg
+*.egg-link
+.venv/
+venv/

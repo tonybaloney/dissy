@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "dissy"
+version = "0.1.0"
+description = "An interactive disassembler console UI"
+authors = ["Anthony Shaw"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+textual = "^0.4.0"
+rich = "^12.6.0"
+distorm3 = "^3.5.2"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2.0"
+
+[tool.poetry.scripts]
+kaskade = "dissy.app:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

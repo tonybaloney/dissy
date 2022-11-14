@@ -1,0 +1,12 @@
+{
+  "configurations": [
+    {
+      "name": "Launch App",
+      "type": "python",
+      "request": "launch",
+      "module": "dissy",
+      "justMyCode": true,
+      "args": ["test/dump.raw"]
+    }
+  ]
+}
