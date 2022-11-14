@@ -16,7 +16,10 @@ class InstructionView(DataTable):
 
     def watch_cursor_cell(self, old, value) -> None:
         updated = False
-        if jmp := is_jump(self.instructions[value.row]):
+        prev_instruction = self.instructions[old.row] if old else None
+        instruction = self.instructions[value.row] if value else None
+
+        if jmp := is_jump(instruction):
             try:
                 offset_row = self.offsets.index(jmp)
                 self.data[offset_row][0].stylize("bold magenta")
@@ -24,7 +27,8 @@ class InstructionView(DataTable):
                 updated = True
             except ValueError:
                 pass
-        if jmp := is_jump(self.instructions[old.row]):
+
+        if jmp := is_jump(prev_instruction):
             try:
                 offset_row = self.offsets.index(jmp)
                 self.data[offset_row][0] = Text(self.data[offset_row][0].plain)
@@ -33,9 +37,18 @@ class InstructionView(DataTable):
             except ValueError:
                 pass
 
+        # Find related registers
+        # Unhighlight previous
+
+
         if updated:
             self._clear_caches()
         return super().watch_cursor_cell(old, value)
+
+    def do_jump(self):
+        jmp = is_jump(self.instructions[self.cursor_cell.row])
+        if jmp:
+            self.cursor_cell = self.cursor_cell._replace(row=self.offsets.index(jmp))
 
 
 class DissyApp(App):
@@ -74,13 +87,8 @@ class DissyApp(App):
     def action_jump_to(self) -> None:
         """An action to jump to target."""
         table = self.query_one(InstructionView)
-        jmp = is_jump(self.instructions[table.cursor_cell.row])
-        if jmp:
-            try:
-                row = self.offsets.index(jmp)
-                table.cursor_cell = (row, 0)
-            except ValueError:
-                pass
+        table.do_jump()
+
 
 @click.command()
 @click.argument('file', type=click.Path(exists=True))
