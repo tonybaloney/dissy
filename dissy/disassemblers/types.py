@@ -14,3 +14,4 @@ class DisassembledImage:
     offsets: List
     entry_point: int
     native_type: NativeType
+    info: str = ""

@@ -28,3 +28,11 @@ def format_instruction(t, instruction, related=None) -> Text:
         return python_dis.format_instruction(instruction, related)
     else:
         raise NotImplementedError
+
+
+def format_offset(t: NativeType, offset: int) -> Text:
+    if t == NativeType.X86_64:
+        return Text("%.8x" % offset)
+    elif t == NativeType.PYTHON:
+        return Text("%d" % offset)
+    raise NotImplementedError

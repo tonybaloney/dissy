@@ -1,0 +1,7 @@
+#sidebar {
+    dock: right;
+    width: 40%;
+    height: 100%;
+    color: $text;
+    background: $background;
+}

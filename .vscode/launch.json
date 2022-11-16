@@ -1,6 +1,14 @@
 {
   "configurations": [
     {
+      "name": "Launch demo dis",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/demo.py",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
       "name": "Launch App",
       "type": "python",
       "request": "launch",
