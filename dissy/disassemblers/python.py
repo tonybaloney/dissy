@@ -1,9 +1,11 @@
-from dissy.disassemblers.types import DisassembledImage, NativeType
 import dis
-import opcode
-from typing import Iterable
-from rich.text import Text
 import sys
+from typing import Iterable
+
+import opcode
+from rich.text import Text
+
+from dissy.disassemblers.types import DisassembledImage, NativeType
 
 TOKEN_COLORS = {
     "TOKEN_INSTRUCTION": "green",
@@ -13,18 +15,31 @@ TOKEN_COLORS = {
     "TOKEN_DELIMITER": "white",
 }
 
-def disassemble(x, position=None, show_caches=False, adaptive=False) -> DisassembledImage:
+
+def disassemble(
+    x, position=None, show_caches=False, adaptive=False
+) -> DisassembledImage:
     if sys.version_info >= (3, 11):
-        instructions_iter: Iterable[dis.Instruction] = dis.get_instructions(x, first_line=position, show_caches=show_caches, adaptive=adaptive)
+        instructions_iter: Iterable[dis.Instruction] = dis.get_instructions(
+            x, first_line=position, show_caches=show_caches, adaptive=adaptive
+        )
     else:
-        instructions_iter: Iterable[dis.Instruction] = dis.get_instructions(x, first_line=position)
+        instructions_iter: Iterable[dis.Instruction] = dis.get_instructions(
+            x, first_line=position
+        )
     offsets = []
     instructions = []
     for i in instructions_iter:
         instructions.append(i)
         offsets.append(i.offset)
 
-    return DisassembledImage(instructions=instructions, offsets=offsets, entry_point=position, native_type=NativeType.PYTHON, info=dis.code_info(x))
+    return DisassembledImage(
+        instructions=instructions,
+        offsets=offsets,
+        entry_point=position,
+        native_type=NativeType.PYTHON,
+        info=dis.code_info(x),
+    )
 
 
 def format_instruction(instruction: dis.Instruction, related=None) -> Text:

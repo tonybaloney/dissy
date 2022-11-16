@@ -1,12 +1,14 @@
 from rich.text import Text
-import dissy.disassemblers.x86_64 as x86_64
+
 import dissy.disassemblers.python as python_dis
-from dissy.disassemblers.types import NativeType, DisassembledImage
+import dissy.disassemblers.x86_64 as x86_64
+from dissy.disassemblers.types import DisassembledImage, NativeType
 
 NATIVE_TO_DISASSEMBLER = {
     NativeType.X86_64: x86_64.disassemble,
     NativeType.PYTHON: python_dis.disassemble,
 }
+
 
 def disassemble(t, file) -> DisassembledImage:
     return NATIVE_TO_DISASSEMBLER[t](file)

@@ -14,6 +14,7 @@ Similar to the Python builtin `dis` module, use `dissy.dis` to disassemble a cod
 
 ```python
 import dissy
+
 dissy.dis(co)
 ```
 
