@@ -27,11 +27,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip ruff shed
-        python -m pip install pytest
         python -m pip install .
     - name: Lint with ruff
       run: ruff dissy
     - name: Check with shed
       run: shed && git diff --exit-code
-    - name: Test with pytest
-      run: pytest
+
