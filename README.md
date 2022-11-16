@@ -19,7 +19,7 @@ dissy.dis(co)
 
 This will open a full-screen disassembler:
 
-![Screenshot of dissy](screenshot.png)
+![Screenshot of dissy](https://github.com/tonybaloney/dissy/blob/master/screenshot.png)
 
 ## x64 dumps disassembly
 
@@ -29,4 +29,4 @@ You can also use the command-line version of dissy to disassemble x64 memory dum
 $ dissy dump.raw
 ```
 
-![Screenshot of dissy](screenshot.png)
+![Screenshot of dissy](https://github.com/tonybaloney/dissy/blob/master/screenshot2.png)
