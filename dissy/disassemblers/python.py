@@ -3,7 +3,7 @@ import dis
 import opcode
 from typing import Iterable
 from rich.text import Text
-
+import sys
 
 TOKEN_COLORS = {
     "TOKEN_INSTRUCTION": "green",
@@ -13,8 +13,11 @@ TOKEN_COLORS = {
     "TOKEN_DELIMITER": "white",
 }
 
-def disassemble(x, position=None) -> DisassembledImage:
-    instructions_iter: Iterable[dis.Instruction] = dis.get_instructions(x, first_line=position)
+def disassemble(x, position=None, show_caches=False, adaptive=False) -> DisassembledImage:
+    if sys.version_info >= (3, 11):
+        instructions_iter: Iterable[dis.Instruction] = dis.get_instructions(x, first_line=position, show_caches=show_caches, adaptive=adaptive)
+    else:
+        instructions_iter: Iterable[dis.Instruction] = dis.get_instructions(x, first_line=position)
     offsets = []
     instructions = []
     for i in instructions_iter:

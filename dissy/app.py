@@ -1,13 +1,11 @@
-from textual.app import App, ComposeResult 
-from textual.widgets import Header, Footer, DataTable
-from textual.reactive import Reactive
-from rich.text import Text
-from textual.widgets import Header, Footer, Input, Static
-
-from dissy.disassemblers import disassemble, is_jump, format_instruction, format_offset
-from dissy.disassemblers.types import NativeType, DisassembledImage
-
 import click
+from rich.text import Text
+from textual.app import App, ComposeResult
+from textual.reactive import Reactive
+from textual.widgets import DataTable, Footer, Header, Input, Static
+
+from dissy.disassemblers import disassemble, format_instruction, format_offset, is_jump
+from dissy.disassemblers.types import DisassembledImage, NativeType
 
 
 class InstructionView(DataTable):
@@ -59,14 +57,20 @@ class InstructionView(DataTable):
             else:
                 self.data[idx][1] = " "
             self.refresh_cell(idx, 1)
-            self.data[idx][2] = format_instruction(self.image.native_type, self.image.instructions[idx], related=instruction)
+            self.data[idx][2] = format_instruction(
+                self.image.native_type,
+                self.image.instructions[idx],
+                related=instruction,
+            )
             self.refresh_cell(idx, 2)
 
         self._clear_caches()
         return super().watch_cursor_cell(old, value)
 
     def do_jump(self):
-        jmp = is_jump(self.image.native_type, self.image.instructions[self.cursor_cell.row])
+        jmp = is_jump(
+            self.image.native_type, self.image.instructions[self.cursor_cell.row]
+        )
         if jmp:
             self.jump_to(jmp)
 
@@ -79,7 +83,9 @@ class InstructionView(DataTable):
                 return
 
     def jump_to(self, offset):
-        self.cursor_cell = self.cursor_cell._replace(row=self.image.offsets.index(offset))
+        self.cursor_cell = self.cursor_cell._replace(
+            row=self.image.offsets.index(offset)
+        )
         self._scroll_cursor_in_to_view(True)
 
 
@@ -95,18 +101,21 @@ class SearchInput(Input):
     }
     """
 
+
 class DissyApp(App):
     """An interactive TUI disassembler."""
 
-    def __init__(self, image: DisassembledImage):
+    def __init__(self, image: DisassembledImage, **kwargs):
         self.image = image
-        super().__init__()
+        super().__init__(**kwargs)
+
     CSS_PATH = "app.css"
-    BINDINGS = [("d", "toggle_dark", "Toggle dark mode"),
-                ("j", "jump_to", "Jump to target"),
-                ("s", "focus_search", "Search"),
-                ("q", "quit", "Quit"),
-                ]
+    BINDINGS = [
+        ("d", "toggle_dark", "Toggle dark mode"),
+        ("j", "jump_to", "Jump to target"),
+        ("s", "focus_search", "Search"),
+        ("q", "quit", "Quit"),
+    ]
     TITLE = "Dissy"
 
     def compose(self) -> ComposeResult:
@@ -119,16 +128,22 @@ class DissyApp(App):
 
     def on_mount(self):
         table = self.query_one(InstructionView)
+        native_type = self.image.native_type
         table.show_header = False
         table.image = self.image
-        table.add_columns("Offset", "I", "Instruction 2")
+
+        table.add_columns("Offset", "I", "Instruction")
         for (offset, line) in zip(self.image.offsets, self.image.instructions):
-            table.add_row(format_offset(self.image.native_type, offset), " ", format_instruction(self.image.native_type, line))
+            table.add_row(
+                format_offset(native_type, offset),
+                " ",
+                format_instruction(native_type, line),
+            )
 
     def action_toggle_dark(self) -> None:
         """An action to toggle dark mode."""
         self.dark = not self.dark
-    
+
     def action_jump_to(self) -> None:
         """An action to jump to target."""
         table = self.query_one(InstructionView)
@@ -144,7 +159,7 @@ class DissyApp(App):
 
 
 @click.command()
-@click.argument('file', type=click.Path(exists=True))
+@click.argument("file", type=click.Path(exists=True))
 def main(file):
     """Run the app."""
     image = disassemble(NativeType.X86_64, file)
