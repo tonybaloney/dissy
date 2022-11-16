@@ -74,6 +74,7 @@ class InstructionView(DataTable):
         for x, row in self.data.items():
             if text.upper() in row[2].plain.upper():
                 self.cursor_cell = self.cursor_cell._replace(row=x)
+                self._scroll_cursor_in_to_view(True)
                 self.focus()
                 return
 
