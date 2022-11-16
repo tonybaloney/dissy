@@ -1,4 +1,7 @@
-import distorm3
+try:
+    import distorm3
+except ImportError:
+    raise ImportError("distorm3 is not installed. Please install it with 'pip install distorm3'")
 from rich.text import Text
 from dissy.disassemblers.types import DisassembledImage, NativeType
 
